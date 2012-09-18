@@ -224,6 +224,7 @@ void dataProviderUnlockCallback (void *info, const void *data, size_t size)
     }
     else
     {
+        NSAssert(!CGSizeEqualToSize(CGSizeZero, outputSize), @"Inappropriate FBO size calculated");
         return outputSize;
     }
 }

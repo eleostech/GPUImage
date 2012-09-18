@@ -45,6 +45,7 @@ NSString *const kGPUImageTwoInputTextureVertexShaderString = SHADER_STRING
     filterInputTextureUniform2 = [filterProgram uniformIndex:@"inputImageTexture2"]; // This does assume a name of "inputImageTexture2" for second input texture in the fragment shader
 
     hasSetFirstTexture = NO;
+    hasSize = NO;
     
 	glEnableVertexAttribArray(filterSecondTextureCoordinateAttribute);
 
@@ -67,7 +68,7 @@ NSString *const kGPUImageTwoInputTextureVertexShaderString = SHADER_STRING
     {
         return;
     }
-    
+    NSAssert(!CGSizeEqualToSize(CGSizeZero, inputTextureSize), @"%@ cannot render with a zero-sized input texture", self);
     [GPUImageOpenGLESContext useImageProcessingContext];
     [self setFilterFBO];
     
@@ -93,6 +94,15 @@ NSString *const kGPUImageTwoInputTextureVertexShaderString = SHADER_STRING
 
 #pragma mark -
 #pragma mark GPUImageInput
+
+- (void)newFrameReadyAtTime:(CMTime)frameTime;
+{
+  if (hasSize) {
+    [super newFrameReadyAtTime:frameTime];
+  } else {
+    NSLog(@"Skipping new frame; need a second input");
+  }
+}
 
 - (NSInteger)nextAvailableTextureIndex;
 {
@@ -128,6 +138,8 @@ NSString *const kGPUImageTwoInputTextureVertexShaderString = SHADER_STRING
         if (CGSizeEqualToSize(newSize, CGSizeZero))
         {
             hasSetFirstTexture = NO;
+        } else {
+            hasSize = YES;
         }
     }
 }

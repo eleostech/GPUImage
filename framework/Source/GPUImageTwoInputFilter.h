@@ -10,6 +10,7 @@ extern NSString *const kGPUImageTwoInputTextureVertexShaderString;
     GLuint filterSourceTexture2;
     
     BOOL hasSetFirstTexture;
+    BOOL hasSize;
 }
 
 @end
