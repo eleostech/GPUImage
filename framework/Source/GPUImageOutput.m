@@ -237,4 +237,16 @@ void report_memory(NSString *tag)
     _audioEncodingTarget.hasAudioTrack = YES;
 }
 
+- (NSString *)description
+{
+  NSMutableString *desc = [NSMutableString stringWithFormat:@"<%p> %@", self, NSStringFromClass(self.class)];
+  [desc appendString:@" -> \n"];
+  for (id target in targets) {
+    NSString *targetDesc = [target description];
+    NSArray *lines = [targetDesc componentsSeparatedByString:@"\n"];
+    [desc appendString:[lines componentsJoinedByString:@"\n  "]];
+  }
+  return desc;
+}
+
 @end
